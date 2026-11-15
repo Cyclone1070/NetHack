@@ -914,6 +914,7 @@ EMSCRIPTEN_KEEPALIVE int nhweb_game_over(void);
 EMSCRIPTEN_KEEPALIVE const char *nhweb_hero_kind(void);
 EMSCRIPTEN_KEEPALIVE const char *nhweb_dungeon_name(void);
 EMSCRIPTEN_KEEPALIVE int nhweb_dungeon_level(void);
+EMSCRIPTEN_KEEPALIVE int nhweb_level_ledger(void);
 EMSCRIPTEN_KEEPALIVE int nhweb_rogue_level(void);
 EMSCRIPTEN_KEEPALIVE int nhweb_resumed(void);
 EMSCRIPTEN_KEEPALIVE int nhweb_restoring(void);
@@ -1394,6 +1395,14 @@ int
 nhweb_dungeon_level(void)
 {
     return dunlev(&u.uz);
+}
+
+/* the hero's level as one number across all the branches, which is already the
+   level being made or entered when the core asks the page for a seed there */
+int
+nhweb_level_ledger(void)
+{
+    return ledger_no(&u.uz);
 }
 
 /* The Rogue tribute level is drawn as text even with tiles on */
