@@ -339,11 +339,6 @@ WASM_CFLAGS += -Wshadow
 # Nethack C flags
 WASM_CFLAGS += $(WINCFLAGS)   #WINCFLAGS set from multiw-2.500
 WASM_CFLAGS += -DSYSCF -DSYSCF_FILE=\"/sysconf\" -DSECURE
-WASM_CFLAGS += -DDUMPLOG
-# judge builds (bot runner, server) read what the hero needn't know; never the client's
-ifdef NHWEB_JUDGE
-WASM_CFLAGS += -DNHWEB_JUDGE
-endif
 #WASM_CFLAGS += -g -I../include -DNOTPARMDECL
 WASM_CFLAGS += -I../include -DNOTPARMDECL
 # NetHack sources control
@@ -378,6 +373,15 @@ override SYSOBJ= $(TARGETPFX)libnhmain.o \
 		$(TARGETPFX)ioctl.o $(TARGETPFX)unixtty.o \
 		$(TARGETPFX)unixunix.o $(TARGETPFX)unixres.o \
 		$(TARGETPFX)winshim.o
+# bot builds (bot runner, replay metrics) also read what the hero needn't
+# know, through sys/libnh/nhbot.c and nhbot.js, and write a dumplog; never
+# the client's
+ifdef NHWEB_BOT
+WASM_CFLAGS += -DNHWEB_BOT -DDUMPLOG
+override SYSSRC += ../sys/libnh/nhbot.c
+override SYSOBJ += $(TARGETPFX)nhbot.o
+EMCC_LFLAGS += --post-js ../sys/libnh/nhbot.js
+endif
 override WINLIB = emranlib
 override LUALIB=
 override TOPLUALIB=
